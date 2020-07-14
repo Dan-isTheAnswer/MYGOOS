@@ -11,6 +11,7 @@ import org.jivesoftware.smack.packet.Message;
 import auctionsniper.ui.MainWindow;
 
 public class Main {
+    @SuppressWarnings("unusesd") private Chat notToBeGCd;
     private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
     private static final int ARG_PASSWORD = 2;
@@ -29,19 +30,12 @@ public class Main {
 
     public static void main(String... args) throws Exception { // vs. main(String[] args)
         Main main = new Main();
-        // XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
-        // Chat chat = connection.getChatManager().createChat(auctionId(args[ARG_ITEM_ID], connection),
-        //         new MessageListener() {
-        //             public void processMessage(Chat aChat, Message message) {
-        //                 // nothing yet
-        //             }
-        //         });
-        // chat.sendMessage(new Message());
-        // p. 101
+        main.joinAuction(connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]), 
+                args[ARG_ITEM_ID]);
     }
 
     private static XMPPConnection 
-    connectTo(String hostname, String username, String password) throws XMPPException {
+    connection(String hostname, String username, String password) throws XMPPException {
         XMPPConnection connection = new XMPPConnection(hostname);
         connection.connect();
         connection.login(username, password, AUCTION_RESOURCE);
@@ -50,7 +44,7 @@ public class Main {
     }
 
     // Warning: throws XMPPException
-    private void joinAuction(XMPPConnection connection, String itemId) {
+    private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         final Chat chat = connection.getChatManager().createChat(
             auctionId(itemId, connection), new MessageListener() {
                 public void processMessage(Chat aChat, Message message) {
