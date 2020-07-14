@@ -43,11 +43,11 @@ public class FakeAuctionServer {
             });
     }
 
-    public String getItemId() {
+    public String getItemID() {
         return itemId;
     }
 
-    public void hasReceivedRequestFromSniper() throws InterruptedException {
+    public void hasReceivedJoinRequestFromSniper() throws InterruptedException {
         messageListener.receivesAMessage();
     }
 

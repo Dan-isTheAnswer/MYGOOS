@@ -1,14 +1,17 @@
+import auctionsniper.Main;
 
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
     private AuctionSniperDriver driver;
+    private static final String STATUS_JOINING = "Joining";
+    private static final String STATUS_LOST = "Lost";
 
     public void startBiddingIn (final FakeAuctionServer auction) {
         Thread thread = new Thread("Test Application") {
             @Override public void run() { // auto-typing isn't worked. 
                 try {
-                    Main.main(XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD, auction.getItemID());
+                    Main.main(FakeAuctionServer.XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD, auction.getItemID());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
