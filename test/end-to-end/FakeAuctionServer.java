@@ -2,6 +2,7 @@
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.MessageListener;
@@ -12,7 +13,8 @@ import org.jivesoftware.smack.packet.Message;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.anything;
 public class FakeAuctionServer {
     private final SingleMessageListener messageListener = new SingleMessageListener();
     
@@ -47,8 +49,23 @@ public class FakeAuctionServer {
         return itemId;
     }
 
+    public void reportPrice(int price, int increment, String bidder) 
+    throws XMPPException {
+        currentChat.sendMessage(
+            String.format("SOLVersion: 1.1; Event: PRICE; "
+                            + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
+                            price, increment, bidder));
+    }
+
     public void hasReceivedJoinRequestFromSniper() throws InterruptedException {
-        messageListener.receivesAMessage();
+        messageListener.receivesAMessage(is(anything()));
+    }
+
+    public void hasReceivedBid(int bid, String sniperId) throws InterruptedException {
+        assertThat(currentChat.getParticipant(), equalTo(sniperId));
+        messageListener.receivesAMessage(
+            equalTo(
+                String.format("SOLVersion: 1.1; Command: BID; Price: %d;", bid)));
     }
 
     public void announceClosed() throws XMPPException {
@@ -65,8 +82,12 @@ public class FakeAuctionServer {
         public void processMessage(Chat chat, Message message) {
             messages.add(message);
         } 
-        public void receivesAMessage() throws InterruptedException {
-            assertThat("Message", messages.poll(5, TimeUnit.SECONDS), is(notNullValue()));
+        public void receivesAMessage(Matcher<? super String> messageMatcher) 
+        throws InterruptedException {
+            // assertThat("Message", messages.poll(5, TimeUnit.SECONDS), is(notNullValue()));
+            final Message message = messages.poll(5, TimeUnit.SECONDS);
+            assertThat("Message", message, is(notNullValue()));
+            assertThat(message.getBody(), messageMatcher);
         }
     }
 }
