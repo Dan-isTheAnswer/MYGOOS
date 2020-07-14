@@ -29,14 +29,15 @@ public class Main {
 
     public static void main(String... args) throws Exception { // vs. main(String[] args)
         Main main = new Main();
-        XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
-        Chat chat = connection.getChatManager().createChat(auctionId(args[ARG_ITEM_ID], connection),
-                new MessageListener() {
-                    public void processMessage(Chat aChat, Message message) {
-                        // nothing yet
-                    }
-                });
-        chat.sendMessage(new Message());
+        // XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+        // Chat chat = connection.getChatManager().createChat(auctionId(args[ARG_ITEM_ID], connection),
+        //         new MessageListener() {
+        //             public void processMessage(Chat aChat, Message message) {
+        //                 // nothing yet
+        //             }
+        //         });
+        // chat.sendMessage(new Message());
+        // p. 101
     }
 
     private static XMPPConnection 
@@ -46,6 +47,23 @@ public class Main {
         connection.login(username, password, AUCTION_RESOURCE);
 
         return connection;
+    }
+
+    // Warning: throws XMPPException
+    private void joinAuction(XMPPConnection connection, String itemId) {
+        final Chat chat = connection.getChatManager().createChat(
+            auctionId(itemId, connection), new MessageListener() {
+                public void processMessage(Chat aChat, Message message) {
+                    SwingUtilities.invokeLater(new Runnable(){
+                        public void run() {
+                            ui.showStatus(MainWindow.STATUS_LOST);
+                        }
+                    });
+                }
+            });
+        this.notToBeGCd = chat;
+
+        chat.sendMessage(new Message());
     }
 
     private static String auctionId(String itemId, XMPPConnection connection) {
