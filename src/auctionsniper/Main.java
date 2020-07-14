@@ -6,8 +6,6 @@ import auctionsniper.ui.MainWindow;
 
 public class Main {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper"; // Create Constant
-    //public static String SNIPER_STATUS_NAME; // Create field
-    public static final String SNIPER_STATUS_NAME = "??"; // status??
 	private MainWindow ui;
 
     public Main() throws Exception {

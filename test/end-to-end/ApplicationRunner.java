@@ -1,11 +1,11 @@
 import auctionsniper.Main;
 
+import static auctionsniper.ui.MainWindow.*;
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
     private AuctionSniperDriver driver;
-    private static final String STATUS_JOINING = "Joining";
-    private static final String STATUS_LOST = "Lost";
+    
 
     public void startBiddingIn (final FakeAuctionServer auction) {
         Thread thread = new Thread("Test Application") {
