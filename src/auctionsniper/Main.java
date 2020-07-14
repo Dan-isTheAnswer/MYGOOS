@@ -22,6 +22,9 @@ public class Main {
     public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%S/" + AUCTION_RESOURCE;
 
     public static final String MAIN_WINDOW_NAME = "Auction Sniper"; // Create Constant
+    // Warning: JOIN_COMMAND_FORMAT & BID_COMMAND_FORMAT are required to be initialized to something else. 
+	public static final String JOIN_COMMAND_FORMAT = "Join Command Format";
+	public static final String BID_COMMAND_FORMAT = "Bid Command Format";
     private MainWindow ui;
 
     public Main() throws Exception {
@@ -45,7 +48,7 @@ public class Main {
 
     // Warning: throws XMPPException
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
-        final Chat chat = connection.getChatManager().createChat(
+        Chat chat = connection.getChatManager().createChat(
             auctionId(itemId, connection), new MessageListener() {
                 public void processMessage(Chat aChat, Message message) {
                     SwingUtilities.invokeLater(new Runnable(){
@@ -57,7 +60,7 @@ public class Main {
             });
         this.notToBeGCd = chat;
 
-        chat.sendMessage(new Message());
+        chat.sendMessage(JOIN_COMMAND_FORMAT);
     }
 
     private static String auctionId(String itemId, XMPPConnection connection) {
