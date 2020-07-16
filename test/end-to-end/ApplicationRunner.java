@@ -1,4 +1,5 @@
 import auctionsniper.Main;
+import auctionsniper.ui.MainWindow;
 
 import static auctionsniper.ui.MainWindow.*;
 
@@ -24,9 +25,15 @@ public class ApplicationRunner {
         driver = new AuctionSniperDriver(1000);
         driver.showsSniperStatus(STATUS_JOINING);
     }
+
+    public void hasShownSniperIsBidding() {
+        driver.showsSniperStatus(STATUS_BIDDING);
+    }
+
     public void showsSniperHasLostAuction() {
         driver.showsSniperStatus(STATUS_LOST);
     }
+
     public void stop() {
         if (driver != null) {
             driver.dispose();
