@@ -2,6 +2,7 @@ package auctionsniper;
 
 public interface AuctionEventListener {
 
-	void auctionClosed();
+    void auctionClosed();
+    void currentPrice(int price, int increment);
 
 }
