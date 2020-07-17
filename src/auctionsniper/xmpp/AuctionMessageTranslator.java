@@ -9,19 +9,26 @@ import org.jivesoftware.smack.packet.Message;
 
 import auctionsniper.AuctionEventListener;
 import auctionsniper.AuctionSniper;
+import auctionsniper.AuctionEventListener.PriceSource;
 
 public class AuctionMessageTranslator implements MessageListener {
-	private AuctionEventListener listener; // Interface 
-	private String sniperId;
+	private AuctionEventListener listener; // Interface
+	private final String sniperId;
 	private AuctionSniper auctionSniper;
-	// "final blank" warning present if these three fields are not initialized by constructor.  
-	public AuctionMessageTranslator(AuctionEventListener listener) {
-		this.listener = listener; // assigned to Interface
-	}
+	// "final blank" warning present if these three fields are not initialized by
+	// constructor.
+	// public AuctionMessageTranslator(AuctionEventListener listener) {
+	// this.listener = listener; // assigned to Interface
+	// }
 
 	public AuctionMessageTranslator(String sniperId, AuctionSniper auctionSniper) {
 		this.sniperId = sniperId;
 		this.auctionSniper = auctionSniper;
+	}
+
+	public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
+		this.sniperId = sniperId;
+		this.listener = listener;
 	}
 
 	@Override
@@ -31,16 +38,27 @@ public class AuctionMessageTranslator implements MessageListener {
 		String eventType = event.type();
 		if ("CLOSE".equals(eventType)) {
 			listener.auctionClosed();
-		} 
+		}
 		if ("PRICE".equals(eventType)) {
-			listener.currentPrice(event.currentPrice(), event.increment()); 
+			listener.currentPrice(event.currentPrice(), event.increment(), event.isFrom(sniperId));
 		}
 	}
 
 	private static class AuctionEvent {
 		private final Map<String, String> fields = new HashMap<>();
-		public String type() {return get("Event");}
-		public int currentPrice() {return getInt("CurrentPrice");}
+
+		public String type() {
+			return get("Event");
+		}
+
+		public PriceSource isFrom(String sniperId) {
+			return sniperId.equals(bidder()) ? PriceSource.FromSniper : PriceSource.FromOtherBidder;
+		}
+		private String bidder() { return get("Bidder");}
+
+		public int currentPrice() {
+			return getInt("CurrentPrice");
+		}
 		public int increment() {return getInt("Increment");}
 
 		private int getInt(String fieldName) {
