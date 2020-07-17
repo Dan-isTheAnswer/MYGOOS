@@ -7,11 +7,20 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 
 import auctionsniper.AuctionEventListener;
+import auctionsniper.AuctionSniper;
 
 public class AuctionMessageTranslator implements MessageListener {
-	private final AuctionEventListener listener; // Interface 
+	private AuctionEventListener listener; // Interface 
+	private String sniperId;
+	private AuctionSniper auctionSniper;
+	// "final blank" warning present if these three fields are not initialized by constructor.  
 	public AuctionMessageTranslator(AuctionEventListener listener) {
 		this.listener = listener; // assigned to Interface
+	}
+
+	public AuctionMessageTranslator(String sniperId, AuctionSniper auctionSniper) {
+		this.sniperId = sniperId;
+		this.auctionSniper = auctionSniper;
 	}
 
 	@Override

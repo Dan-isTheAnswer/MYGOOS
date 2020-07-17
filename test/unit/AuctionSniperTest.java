@@ -4,6 +4,7 @@ import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import auctionsniper.Auction;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
 
