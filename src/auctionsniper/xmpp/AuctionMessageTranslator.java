@@ -3,8 +3,6 @@ package auctionsniper.xmpp;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.event.DocumentEvent.EventType;
-
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
@@ -30,7 +28,7 @@ public class AuctionMessageTranslator implements MessageListener {
 	public void processMessage(Chat chat, Message message) {
 		AuctionEvent event = AuctionEvent.from(message.getBody());
 
-		String type = event.type();
+		String eventType = event.type();
 		if ("CLOSE".equals(eventType)) {
 			listener.auctionClosed();
 		} 
@@ -46,7 +44,7 @@ public class AuctionMessageTranslator implements MessageListener {
 		public int increment() {return getInt("Increment");}
 
 		private int getInt(String fieldName) {
-			return Integer.parseInt(getInt(fieldName));
+			return Integer.parseInt(get(fieldName));
 		}
 
 		private String get(String fieldName) {return fields.get(fieldName);}
