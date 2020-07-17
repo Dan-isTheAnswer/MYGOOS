@@ -27,8 +27,8 @@ public class Main implements SniperListener {
 
     public static final String MAIN_WINDOW_NAME = "Auction Sniper"; // Create Constant
     // Warning: JOIN_COMMAND_FORMAT & BID_COMMAND_FORMAT are required to be initialized to something else. 
-	public static final String JOIN_COMMAND_FORMAT = "Join Command Format";
-	public static final String BID_COMMAND_FORMAT = "Bid Command Format";
+	public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
+    public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
     private MainWindow ui;
 
     public Main() throws Exception {
@@ -50,16 +50,27 @@ public class Main implements SniperListener {
         return connection;
     }
 
-    // Warning: throws XMPPException
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         disconnectWhenUICloses(connection);
-        Chat chat = connection.getChatManager().createChat(
-            auctionId(itemId, connection), 
-            new AuctionMessageTranslator(new AuctionSniper(this)));
+        
+        
+        final Chat chat = connection.getChatManager().createChat(
+            auctionId(itemId, connection), null); 
         this.notToBeGCd = chat;
-
+            
+        Auction auction = new Auction(){
+            public void bid(int amount) {
+                try {
+                    chat.sendMessage(String.format(BID_COMMAND_FORMAT, amount));
+                } catch (XMPPException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        chat.addMessageListener(
+            new AuctionMessageTranslator(new AuctionSniper(auction, this))
+        );
         chat.sendMessage(JOIN_COMMAND_FORMAT);
-        // notToBeGCd = chat;
     }
 
     private void disconnectWhenUICloses(final XMPPConnection connection) {
@@ -93,6 +104,16 @@ public class Main implements SniperListener {
             @Override
             public void run() {
                 ui.showStatus(MainWindow.STATUS_LOST);
+            }
+        });
+    }
+
+    @Override
+    public void sniperBidding() {
+        SwingUtilities.invokeLater(new Runnable(){
+            @Override
+            public void run() {
+                ui.showStatus(MainWindow.STATUS_BIDDING);
             }
         });
     }
