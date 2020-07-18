@@ -8,10 +8,12 @@ import org.junit.runner.RunWith;
 import auctionsniper.Auction;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
+import auctionsniper.SniperState;
 import auctionsniper.AuctionEventListener.PriceSource;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
+    protected static final String ITEM_ID = "item-id";
     private final Mockery context = new Mockery();
     private final SniperListener sniperListener = context.mock(SniperListener.class);
     private final Auction auction = context.mock(Auction.class);
@@ -33,7 +35,7 @@ public class AuctionSniperTest {
     reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction);
-            allowing(sniperListener).sniperBidding();
+            allowing(sniperListener).sniperBidding(new SniperState(ITEM_ID, 0, 0) );
                     then(sniperState.is("Bidding"));
 
             atLeast(1).of(sniperListener).sniperLost();
@@ -63,10 +65,13 @@ public class AuctionSniperTest {
     bidsHighterAndReportsBiddingWhenNewPriceArrives() {
         final int price = 1001;
         final int increment = 25;
+        final int bid = price + increment;
+
         context.checking(new Expectations() {
             {
-                one(auction).bid(price + increment);
-                atLeast(1).of(sniperListener).sniperWinning();
+                one(auction).bid(bid);
+                atLeast(1).of(sniperListener).sniperBidding(
+                                            new SniperState(ITEM_ID, price, bid));
             }
         });
         
