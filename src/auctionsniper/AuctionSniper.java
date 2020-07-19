@@ -4,6 +4,7 @@ public class AuctionSniper implements AuctionEventListener {
     private boolean isWinning = false;
     private final SniperListener sniperListener;
     private final Auction auction;
+    private String itemId;
 
     public AuctionSniper(Auction auction, SniperListener sniperListener) {
         this.auction = auction;

@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 
+import auctionsniper.SniperState;
+
 import static auctionsniper.Main.MAIN_WINDOW_NAME;
 
 public class MainWindow extends JFrame {
@@ -19,13 +21,13 @@ public class MainWindow extends JFrame {
 	public static final String STATUS_WINNING = "Winning";
 	public static final String STATUS_WON = "Won";
 
-    public static final String SNIPER_STATUS_NAME = "sniper status main";
+    public static final String SNIPER_STATUS_NAME = "sniper status";
     private static final String SNIPER_TABLE_NAME = "sniper table";
     private final JLabel sniperStatus = createLabel(STATUS_JOINING);
     private final SnipersTableModel snipers = new SnipersTableModel();
 
     public MainWindow() {
-        super("Auction Sniper");
+        super("Auction Sniper Main");
         setName(MAIN_WINDOW_NAME);
         fillContentPane(makeSnipersTable());
         pack();
@@ -60,4 +62,8 @@ public class MainWindow extends JFrame {
     public void showStatusText(String statusText) {
         snipers.setStatusText(statusText);
     }
+
+	public void sniperStatusChanged(SniperState sniperState, String statusText) {
+        snipers.sniperStatusChanged(sniperState, statusText);
+	}
 }
