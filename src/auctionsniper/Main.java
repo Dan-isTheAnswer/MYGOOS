@@ -56,23 +56,14 @@ public class Main  {
             auctionId(itemId, connection), null); 
         this.notToBeGCd = chat;
             
-        // Auction auction = new Auction(){
-        //     public void bid(int amount) {
-        //         try {
-        //             chat.sendMessage(String.format(BID_COMMAND_FORMAT, amount));
-        //         } catch (XMPPException e) {
-        //             e.printStackTrace();
-        //         }
-        //     }
-        // };
         Auction auction = new XMPPAuction(chat);
         chat.addMessageListener(
             new AuctionMessageTranslator(
                 connection.getUser(),
-                new AuctionSniper(auction, new SniperStateDisplayer()))
+                new AuctionSniper(auction, new SniperStateDisplayer())
+            )
         );
         auction.join();
-        // chat.sendMessage(JOIN_COMMAND_FORMAT);
     }
 
     private void disconnectWhenUICloses(final XMPPConnection connection) {
