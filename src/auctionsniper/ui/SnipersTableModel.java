@@ -3,6 +3,7 @@ package auctionsniper.ui;
 import javax.swing.table.AbstractTableModel;
 
 import auctionsniper.Column;
+import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 
 public class SnipersTableModel extends AbstractTableModel {
