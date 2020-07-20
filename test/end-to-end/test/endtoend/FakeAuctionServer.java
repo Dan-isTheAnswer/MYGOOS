@@ -1,12 +1,8 @@
 package test.endtoend;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 import org.hamcrest.Matcher;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
@@ -14,10 +10,8 @@ import org.jivesoftware.smack.packet.Message;
 import auctionsniper.Main;
 
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.anything;
+
 public class FakeAuctionServer {
     private final SingleMessageListener messageListener = new SingleMessageListener();
     
@@ -40,7 +34,7 @@ public class FakeAuctionServer {
         connection.login(String.format(ITEM_ID_AS_LOGIN, itemId), 
                         AUCTION_PASSWORD, AUCTION_RESOURCE);
         connection.getChatManager().addChatListener(
-            new ChatManagerListener(){ // Anonymous Class  
+            new ChatManagerListener(){ // Q. Who uses the method chatCreated()?? Does Listener use this?
                 public void chatCreated(Chat chat, boolean createdLocally) {
                     currentChat = chat;
                     chat.addMessageListener(messageListener);
@@ -60,7 +54,7 @@ public class FakeAuctionServer {
                             price, increment, bidder));
     }
 
-    public void hasReceivedJoinRequestFromSniper(String sniperId) throws InterruptedException {
+    public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {
         // messageListener.receivesAMessage(is(anything()));
         receivesAMessageMatching(sniperId, equalTo(Main.JOIN_COMMAND_FORMAT));
     }
@@ -82,25 +76,12 @@ public class FakeAuctionServer {
     }
 
     public void announceClosed() throws XMPPException {
-        currentChat.sendMessage(new Message());
+        currentChat.sendMessage("SOLVersion: 1.1; Event: CLOSE;");
     }
 
     public void stop() {
         connection.disconnect();
     }
 
-    public class SingleMessageListener implements MessageListener {
-        private final ArrayBlockingQueue<Message> messages = 
-                                    new ArrayBlockingQueue<>(1);
-        public void processMessage(Chat chat, Message message) {
-            messages.add(message);
-        } 
-        public void receivesAMessage(Matcher<? super String> messageMatcher) 
-        throws InterruptedException {
-            // assertThat("Message", messages.poll(5, TimeUnit.SECONDS), is(notNullValue()));
-            final Message message = messages.poll(5, TimeUnit.SECONDS);
-            assertThat("Message", message, is(notNullValue()));
-            assertThat(message.getBody(), messageMatcher);
-        }
-    }
+    
 }

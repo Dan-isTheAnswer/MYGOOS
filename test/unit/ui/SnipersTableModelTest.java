@@ -63,4 +63,11 @@ public class SnipersTableModelTest {
     protected Matcher<TableModelEvent> aRowChangedEvent() {
         return samePropertyValuesAs(new TableModelEvent(model, 0));
     }
+
+    @Test public void 
+    setsUpColumnHeadings() {
+        for (Column column : Column.values()) {
+            assertEquals(column.name, model.getColumnName(column.ordinal()));
+        }
+    }
 }

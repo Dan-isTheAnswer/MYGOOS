@@ -7,6 +7,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
 import auctionsniper.ui.MainWindow;
+import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.xmpp.AuctionMessageTranslator;
 
 import java.awt.event.WindowAdapter;
@@ -27,10 +28,16 @@ public class Main  {
     // Warning: JOIN_COMMAND_FORMAT & BID_COMMAND_FORMAT are required to be initialized to something else. 
 	public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
+    private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
 
     public Main() throws Exception {
-        startUserInterface();
+        SwingUtilities.invokeAndWait(new Runnable(){
+            @Override
+            public void run() {
+                ui = new MainWindow(snipers);
+            }
+        });
     }
 
     public static void main(String... args) throws Exception { // vs. main(String[] args)
@@ -60,7 +67,8 @@ public class Main  {
         chat.addMessageListener(
             new AuctionMessageTranslator(
                 connection.getUser(),
-                new AuctionSniper(auction, new SniperStateDisplayer())
+                new AuctionSniper(itemId, auction, 
+                                new SwingThreadSniperListener(snipers))
             )
         );
         auction.join();
@@ -81,14 +89,6 @@ public class Main  {
                             connection.getServiceName());
     }
 
-    private void startUserInterface() throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable(){
-            @Override
-            public void run() {
-                ui = new MainWindow();
-            }
-        });
-    }
 
 
 
@@ -118,11 +118,11 @@ public class Main  {
 
 
     public class SniperStateDisplayer implements SniperListener {
-        public void sniperBidding(final SniperState state) {
+        public void sniperBidding(final SniperSnapshot snapshot) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    ui.sniperStatusChanged(state, MainWindow.STATUS_BIDDING);
+                    ui.sniperStateChanged(snapshot);
                 }
             });
         }
@@ -146,6 +146,18 @@ public class Main  {
                     ui.showStatus(status);
                 }
             });
+        }
+
+		@Override
+		public void sniperStateChanged(SniperSnapshot with) {
+			// TODO Auto-generated method stub
+			
+		}
+
+        @Override
+        public void sniperBidding(SniperState sniperState) {
+            // TODO Auto-generated method stub
+
         }
 
     }
