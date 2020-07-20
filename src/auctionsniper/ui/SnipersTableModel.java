@@ -7,7 +7,8 @@ import auctionsniper.SniperState;
 
 public class SnipersTableModel extends AbstractTableModel {
     private final static SniperState STARTING_UP = new SniperState("", 0, 0);
-    private String statusText = MainWindow.STATUS_JOINING;
+    private static String[] STATUS_TEXT = { MainWindow.STATUS_JOINING, 
+                                        MainWindow.STATUS_BIDDING};
     private SniperState sniperState = STARTING_UP;
     private String newStatusText = "new!";
 
@@ -36,9 +37,9 @@ public class SnipersTableModel extends AbstractTableModel {
         statusText = newStatusText;
         fireTableRowsUpdated(0, 0);
 	}
-	public void sniperStatusChanged(SniperState newSniperState, String newStatusText) {
-        sniperState = newSniperState;
-        statusText = newStatusText;
+	public void sniperStateChanged(SniperSnapshot newSnapshot) {
+        this.snapshot = newSnapshot;
+        this.state = STATUS_TEXT[newSnapshot.state.ordinal()];
         fireTableRowsUpdated(0, 0);
 	}
 	
