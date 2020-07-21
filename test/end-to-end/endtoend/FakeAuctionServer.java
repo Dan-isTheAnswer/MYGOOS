@@ -6,6 +6,11 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.is;
+
 public class FakeAuctionServer { // This is Auction. 
     public static final String AUCTION_RESOURCE = "Auction";
     public static final String XMPP_HOSTNAME = "localhost";
@@ -41,15 +46,33 @@ public class FakeAuctionServer { // This is Auction.
     }
 
 	public void hasReceivedJoinRequestFromSniper() throws InterruptedException {
-        messageListener.receivesAMessage();
+        messageListener.receivesAMessage(is(anything()));
 	}
 
-	public void announceClosed() throws XMPPException {
+    public void hasReceivedBid(int bid, String sniperId)
+    throws InterruptedException {
+        assertThat(currentChat.getParticipant(), equalTo(sniperId));
+        messageListener.receivesAMessage(
+            equalTo(
+                String.format("SOLVersion: 1.1; Command: BID; Price: %d;", bid)));
+    }
+    
+    public void reportPrice(int price, int increment, String bidder)
+    throws XMPPException {
+        currentChat.sendMessage(
+            String.format("SOLVersion: 1.1; Event: PRICE; "
+            + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
+            price, increment, bidder));
+    }
+        
+        
+    public void announceClosed() throws XMPPException {
         currentChat.sendMessage(new Message());
-	}
+    }
 
-	public void stop() {
+    public void stop() {
         connection.disconnect();
 	}
+
 
 }
