@@ -7,7 +7,8 @@ import static auctionsniper.ui.MainWindow.*;
 
 public class ApplicationRunner {
     // **AuctionSniper for Test
-    // FakeAuctionServer Host
+    // This AuctionSniper is connected to FakeAuctionServer by XMPP_HOSTNAME. 
+    // Auction Host name is XMPP_HOSTNAME. 
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
     public static final String SNIPER_XMPP_ID = SNIPER_ID + "@" 
