@@ -1,6 +1,6 @@
 package endtoend;
 
-import auctionsniper.Main;
+import static auctionsniper.Main.*;
 
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
