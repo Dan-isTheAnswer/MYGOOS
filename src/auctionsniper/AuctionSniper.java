@@ -19,7 +19,7 @@ public class AuctionSniper implements AuctionEventListener {
     
     @Override
     public void currentPrice(int price, int increment) {
-        // TODO Auto-generated method stub
-
+        auction.bid(price + increment);
+        sniperListener.sniperBidding();
     }
 }
