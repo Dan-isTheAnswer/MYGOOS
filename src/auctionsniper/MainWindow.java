@@ -34,5 +34,10 @@ public class MainWindow extends JFrame {
         result.setName(SNIPER_STATUS_NAME);
         result.setBorder(new LineBorder(Color.BLACK));
         return result;
-    } // How to change Label when its status is changed?
+    } // Q. How can I change the label when its status is changed?
+    // A. Use JLabel setText() method
+
+    public void showStatus(String status) {
+        sniperStatus.setText(status);
+    }
 }

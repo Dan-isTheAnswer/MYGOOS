@@ -32,21 +32,13 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        XMPPConnection connection = connectTo(args[ARG_HOSTNAME],
-                                            args[ARG_USERNAME],
-                                            args[ARG_PASSWORD]);
-        Chat chat = connection.getChatManager().createChat(
-                        auctionId(args[ARG_ITEM_ID], connection),
-                        new MessageListener() {
-                            public void processMessage(Chat aChat, Message message) {
-                                // nothing yet
-                            }
-                        });
-        chat.sendMessage(new Message());
+        main.joinAuction(
+            connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]),
+            args[ARG_ITEM_ID]);
     }
 
     private static XMPPConnection
-    connectTo(String hostname, String username, String password)
+    connection(String hostname, String username, String password)
     throws XMPPException {
         XMPPConnection connection = new XMPPConnection(hostname);
         connection.connect();
@@ -57,6 +49,23 @@ public class Main {
     private static String auctionId(String itemId, XMPPConnection connection) {
         return String.format(AUCTION_ID_FORMAT, itemId,
             connection.getServiceName());
+    }
+
+    private void joinAuction(XMPPConnection connection, String itemId)
+    throws XMPPException {
+        final Chat chat = connection.getChatManager().createChat(
+            auctionId(itemId, connection),
+            new MessageListener() {
+            public void processMessage(Chat aChat, Message message) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        ui.showStatus(MainWindow.STATUS_LOST);
+                    }
+                });
+            }
+        });
+        this.notToBeGCd = chat;
+        chat.sendMessage(new Message());
     }
 
     private void startUserInterface() throws Exception {
