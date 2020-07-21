@@ -1,17 +1,23 @@
 package test.endtoend;
 
 import auctionsniper.Main;
+import auctionsniper.ui.MainWindow;
 
 import static auctionsniper.ui.MainWindow.*;
 
 public class ApplicationRunner {
+    // **AuctionSniper for Test
+    // FakeAuctionServer Host
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
-    public static final String SNIPER_XMPP_ID = SNIPER_ID + "@" + FakeAuctionServer.XMPP_HOSTNAME + "/Auction";
+    public static final String SNIPER_XMPP_ID = SNIPER_ID + "@" 
+                                + FakeAuctionServer.XMPP_HOSTNAME + "/Auction";
     private AuctionSniperDriver driver;
+    private String itemId;
     
 
     public void startBiddingIn (final FakeAuctionServer auction) {
+        itemId = auction.getItemID();
         Thread thread = new Thread("Test Application") {
             @Override public void run() { // auto-typing isn't worked. 
                 try {
@@ -24,14 +30,29 @@ public class ApplicationRunner {
         thread.setDaemon(true);
         thread.start();
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus(STATUS_JOINING);
+        driver.showsSniperStatus(itemId, 1000, 1000, STATUS_JOINING);
     }
-    public void showsSniperHasLostAuction() {
-        driver.showsSniperStatus(STATUS_LOST);
+
+    public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
+        driver.showsSniperStatus(itemId, lastPrice, lastBid ,STATUS_BIDDING);
     }
+
+    public void hasShownSniperIsWinning(int winningBid) {
+        driver.showsSniperStatus(itemId, winningBid, winningBid, STATUS_WON);
+    }
+    public void showsSniperHasLostAuction(int lastPrice) {
+        driver.showsSniperStatus(itemId, lastPrice, lastPrice ,STATUS_LOST);
+    }
+
+    public void showsSniperHasWonAuction(int lastPrice) {
+        driver.showsSniperStatus(itemId, lastPrice, lastPrice, STATUS_WON);
+    }
+    
     public void stop() {
         if (driver != null) {
             driver.dispose();
         }
     }
+
+
 }
