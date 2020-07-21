@@ -1,6 +1,10 @@
 package endtoend;
 
-import static auctionsniper.Main.*;
+import static auctionsniper.MainWindow.STATUS_JOINING;
+import static auctionsniper.MainWindow.STATUS_LOST;
+import static endtoend.FakeAuctionServer.XMPP_HOSTNAME;
+
+import auctionsniper.Main;
 
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
