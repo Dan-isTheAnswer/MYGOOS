@@ -22,7 +22,6 @@ public class SingleMessageListener implements MessageListener {
         messages.add(message);
     }
 
-	@SuppressWarnings("unchecked")
     public void receivesAMessage(Matcher<? super String> messageMatcher)
     throws InterruptedException {
         final Message message = messages.poll(5, TimeUnit.SECONDS);
