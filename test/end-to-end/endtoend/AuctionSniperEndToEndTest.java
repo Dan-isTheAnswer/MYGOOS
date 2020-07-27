@@ -50,7 +50,7 @@ public class AuctionSniperEndToEndTest {
 
         auction.announceClosed();
         application.showsSniperHasWonAuction(); // **
-        }
+    }
 
 
     @After public void stopAuction() {
