@@ -36,20 +36,22 @@ public class SnipersTableModelTest {
     hasEnoughColumns() { 
         assertThat(model.getColumnCount(), equalTo(Column.values().length));
     }
+
     @Test public void
     setsSniperValuesInColumns() {
         context.checking(new Expectations() {{
-        one(listener).tableChanged(with(aRowChangedEvent()));
-    }});
+            one(listener).tableChanged(with(aRowChangedEvent()));
+        }});
 
-    model.sniperStatusChanged(new SniperState("item id", 555, 666),
-        MainWindow.STATUS_BIDDING);
-    
-        assertColumnEquals(Column.ITEM_IDENTIFIER, "item id"); 
-        assertColumnEquals(Column.LAST_PRICE, 555);
-        assertColumnEquals(Column.LAST_BID, 666);
-        assertColumnEquals(Column.SNIPER_STATUS, MainWindow.STATUS_BIDDING);
+        model.sniperStatusChanged(new SniperState("item id", 555, 666),
+            MainWindow.STATUS_BIDDING);
+        
+            assertColumnEquals(Column.ITEM_IDENTIFIER, "item id"); 
+            assertColumnEquals(Column.LAST_PRICE, 555);
+            assertColumnEquals(Column.LAST_BID, 666);
+            assertColumnEquals(Column.SNIPER_STATUS, MainWindow.STATUS_BIDDING);
     }
+
     private void assertColumnEquals(Column column, Object expected) {
         final int rowIndex = 0;
         final int columnIndex = column.ordinal();
@@ -59,3 +61,7 @@ public class SnipersTableModelTest {
         return samePropertyValuesAs(new TableModelEvent(model, 0));
     }
 }
+
+// TODO: "It’s gone past the Bidding check and now fails 
+// because the last price column, “B”, has not yet been updated." p.159
+// I need to figure out why these tests are passed all. 
