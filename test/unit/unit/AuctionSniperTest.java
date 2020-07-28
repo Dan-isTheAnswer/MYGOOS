@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import auctionsniper.Auction;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
+import auctionsniper.SniperState;
 import auctionsniper.AuctionEventListener.PriceSource;
 
 @RunWith(JMock.class)
@@ -18,9 +19,10 @@ public class AuctionSniperTest {
     private final SniperListener sniperListener =
         context.mock(SniperListener.class);
     private final Auction auction = context.mock(Auction.class);
-    private final AuctionSniper sniper = 
-        new AuctionSniper(auction, sniperListener);
     private final States sniperState = context.states("sniper");
+    private final String ITEM_ID = "item-12346";
+    private final AuctionSniper sniper = 
+        new AuctionSniper(auction, ITEM_ID, sniperListener);
     
     @Test public void
     reportsLostWhenAuctionCloses() {
@@ -35,9 +37,12 @@ public class AuctionSniperTest {
     bidsHigherAndReportsBiddingWhenNewPriceArrives() {
         final int price = 1001;
         final int increment = 25;
+        final int bid = price + increment;
+        
         context.checking(new Expectations() {{
-            one(auction).bid(price + increment);
-            atLeast(1).of(sniperListener).sniperBidding();
+            one(auction).bid(bid);
+            atLeast(1).of(sniperListener).sniperBidding(
+                new SniperState(ITEM_ID, price, bid));
         }});
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }
@@ -62,7 +67,7 @@ public class AuctionSniperTest {
     reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction); 
-            allowing(sniperListener).sniperBidding();
+            allowing(sniperListener).sniperBidding(with(any(SniperState.class)));
             then(sniperState.is("bidding")); 
             atLeast(1).of(sniperListener).sniperLost();
             when(sniperState.is("bidding")); 
@@ -82,3 +87,9 @@ public class AuctionSniperTest {
         sniper.auctionClosed();
     }
 }
+// TODO: unexpected invocation ... sniper has no current state
+// parameter 0 did not match: <auctionsniper.SniperState@71e7a66b>,
+// because was <auctionsniper.SniperState@2d6a9952> 
+
+// solved: I figured out the hashcode is different from each other. 
+// So, I generated equals() and hashCode() in SniperState.java 
