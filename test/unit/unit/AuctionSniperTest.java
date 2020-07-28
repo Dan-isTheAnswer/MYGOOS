@@ -87,9 +87,3 @@ public class AuctionSniperTest {
         sniper.auctionClosed();
     }
 }
-// TODO: unexpected invocation ... sniper has no current state
-// parameter 0 did not match: <auctionsniper.SniperState@71e7a66b>,
-// because was <auctionsniper.SniperState@2d6a9952> 
-
-// solved: I figured out the hashcode is different from each other. 
-// So, I generated equals() and hashCode() in SniperState.java 
