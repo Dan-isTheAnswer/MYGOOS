@@ -23,11 +23,13 @@ public class Main {
 
     public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
-
+    private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
 
     public Main() throws Exception {
-        startUserInterface();
+        SwingUtilities.invokeAndWait(new Runnable() {
+            public void run() { ui = new MainWindow(snipers); }
+        });
     }
 
     public static void main(String... args) throws Exception {
@@ -62,7 +64,7 @@ public class Main {
         chat.addMessageListener(
             new AuctionMessageTranslator(
                 connection.getUser(),
-                new AuctionSniper(auction, itemId, new SniperStateDisplayer())));
+                new AuctionSniper(auction, itemId, new SwingThreadSniperListener(snipers))));
         auction.join();
     }
 
@@ -134,6 +136,12 @@ public class Main {
         private void showStatus(final String status) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() { ui.showStatus(status); }
+            });
+        }
+
+        public void sniperStateChanged(final SniperSnapshot snapshot) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() { mainWindow.sniperStateChanged(snapshot); }
             });
         }
     }

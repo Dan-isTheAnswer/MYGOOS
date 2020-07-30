@@ -1,40 +1,18 @@
 package auctionsniper;
 
-public class SniperState {
-    public final String itemId;
-    public final int lastPrice;
-    public final int lastBid;
-    
-    public SniperState(String itemId, int lastPrice, int lastBid) {
-        this.itemId = itemId;
-        this.lastPrice = lastPrice;
-        this.lastBid = lastBid;
+public enum SniperState {
+    JOINING {
+        @Override public SniperState whenAuctionClosed() { return LOST; }
+    },
+    BIDDING {
+        @Override public SniperState whenAuctionClosed() { return LOST; }
+    },
+    WINNING {
+        @Override public SniperState whenAuctionClosed() { return WON; }
+    },
+    LOST,
+    WON;
+    public SniperState whenAuctionClosed() {
+        throw new Defect("Auction is already closed");
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SniperState other = (SniperState) obj;
-        if (itemId == null) {
-            if (other.itemId != null)
-                return false;
-        } else if (!itemId.equals(other.itemId))
-            return false;
-        return true;
-    }
-
-    
 }

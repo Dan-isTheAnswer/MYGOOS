@@ -52,6 +52,13 @@ public class SnipersTableModelTest {
             assertColumnEquals(Column.SNIPER_STATUS, MainWindow.STATUS_BIDDING);
     }
 
+    @Test public void
+    setsUpColumnHeadings() {
+        for (Column column: Column.values()) {
+            assertEquals(column.name, model.getColumnName(column.ordinal()));
+        }
+    }
+
     private void assertColumnEquals(Column column, Object expected) {
         final int rowIndex = 0;
         final int columnIndex = column.ordinal();
@@ -64,4 +71,5 @@ public class SnipersTableModelTest {
 
 // TODO: "It’s gone past the Bidding check and now fails 
 // because the last price column, “B”, has not yet been updated." p.159
-// I need to figure out why these tests are passed all. 
+// 1. I need to figure out why these tests are passed all.
+// 2. figure out unexpected invokation. 

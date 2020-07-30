@@ -8,6 +8,7 @@ import static auctionsniper.MainWindow.STATUS_WON;
 import static endtoend.FakeAuctionServer.XMPP_HOSTNAME;
 
 import auctionsniper.Main;
+import auctionsniper.MainWindow;
 
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
@@ -30,7 +31,10 @@ public class ApplicationRunner {
         thread.setDaemon(true);
         thread.start();
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus(itemId, 0, 0, STATUS_JOINING);
+        driver.hasTitle(MainWindow.APPLICATION_TITLE);
+        driver.hasColumnTitles();
+        driver.showsSniperStatus(JOINING.itemId, JOINING.lastPrice,
+                JOINING.lastBid, textFor(SniperState.JOINING));
     }
     
     public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
