@@ -76,16 +76,6 @@ public class Main {
         });
     }
 
-    private void startUserInterface() throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            public void run() {
-                ui = new MainWindow();
-            }
-
-        });
-    }
 
     public static class XMPPAuction implements Auction {
         private final Chat chat;
@@ -111,39 +101,5 @@ public class Main {
         }
     }
 
-    public class SniperStateDisplayer implements SniperListener {
-
-        public void sniperBidding(final SniperState state) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    ui.sniperStatusChanged(state, MainWindow.STATUS_BIDDING);
-                }
-            });
-        }
-    
-        public void sniperLost() {
-            showStatus(MainWindow.STATUS_LOST);
-        }
-    
-        public void sniperWinning() {
-            showStatus(MainWindow.STATUS_WINNING);
-        }
-
-        public void sniperWon() {
-            showStatus(MainWindow.STATUS_WON);
-        }
-    
-        private void showStatus(final String status) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() { ui.showStatus(status); }
-            });
-        }
-
-        public void sniperStateChanged(final SniperSnapshot snapshot) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() { mainWindow.sniperStateChanged(snapshot); }
-            });
-        }
-    }
 
 }

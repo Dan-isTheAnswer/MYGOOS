@@ -1,14 +1,12 @@
 package auctionsniper;
 
+import java.util.ArrayList;
+
 import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
 public class SnipersTableModel extends AbstractTableModel {
-    private final static SniperState STARTING_UP = new SniperState("", 0, 0);
-    private String statusText = MainWindow.STATUS_JOINING;
-    private SniperState sniperState = STARTING_UP;
-
-
+    private SniperSnapshot snapshot;
     private final static String[] STATUS_TEXT = {
         "Joining", "Bidding", "Winning", "Lost", "Won"
     };
@@ -28,11 +26,6 @@ public class SnipersTableModel extends AbstractTableModel {
         return Column.at(columnIndex).valueIn(snapshot);
     }
 
-    public void setStatusText(String newStatusText) {
-        statusText = newStatusText;
-        fireTableRowsUpdated(0, 0);
-    }
-
     public static String textFor(SniperState state) {
         return STATUS_TEXT[state.ordinal()];
     }
@@ -41,11 +34,4 @@ public class SnipersTableModel extends AbstractTableModel {
         return Column.at(column).name;
     }
     
-    // public void sniperStatusChanged(SniperState newSniperState, 
-    //                                     String newStatusText)
-    // {
-        //         sniperState = newSniperState;
-        //         statusText = newStatusText;
-        //         fireTableRowsUpdated(0, 0);
-        // }
 }

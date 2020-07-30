@@ -23,10 +23,11 @@ public class MainWindow extends JFrame {
     
     public static final String SNIPER_STATUS_NAME = "sniper status";
     public static final String SNIPERS_TABLE_NAME = "Auction Sniper Table";
+    public static final String APPLICATION_TITLE = "Auction Sniper";
     private final JLabel sniperStatus = createLabel(STATUS_JOINING);
     private final SnipersTableModel snipers = new SnipersTableModel();
     
-    public MainWindow() {
+    public MainWindow(SnipersTableModel snipersTableModel) {
         super("Auction Sniper");
         add(sniperStatus);
         setName(MAIN_WINDOW_NAME);
@@ -55,10 +56,6 @@ public class MainWindow extends JFrame {
         return result;
     } // Q. How can I change the label when its status is changed?
     // A. Use JLabel setText() method
-
-    public void showStatus(String statusText) {
-        snipers.setStatusText(statusText);
-    }
 
     public void sniperStateChanged(SniperSnapshot snapshot) {
         snipers.sniperStateChanged(snapshot);
