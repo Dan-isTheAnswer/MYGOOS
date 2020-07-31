@@ -17,7 +17,7 @@ public enum Column {
             return snapshot.lastBid;
         }
     },
-    SNIPER_STATE ("Sniper State") {
+    SNIPER_STATE ("State") { // TODO: "Sniper State"
         @Override public Object valueIn(SniperSnapshot snapshot) {
             return SnipersTableModel.textFor(snapshot.state);
         }
