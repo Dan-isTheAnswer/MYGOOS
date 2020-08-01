@@ -2,15 +2,12 @@ package auctionsniper;
 
 import static auctionsniper.Main.MAIN_WINDOW_NAME;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.LineBorder;
 
 
 @SuppressWarnings("serial")
@@ -51,4 +48,8 @@ public class MainWindow extends JFrame {
     public void showStatusText(String statusText) {
         snipers.setStatusText(statusText);
     }
+
+	public void sniperStatusChanged(SniperState sniperState, String statusText) {
+        snipers.sniperStatusChanged(sniperState, statusText);
+	}
 }

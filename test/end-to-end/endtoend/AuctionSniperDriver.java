@@ -7,7 +7,6 @@ import com.objogate.wl.swing.gesture.GesturePerformer;
 
 import auctionsniper.Main;
 
-import static org.hamcrest.Matchers.equalTo;
 import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
 // import static auctionsniper.Main.MAIN_WINDOW_NAME;
