@@ -15,14 +15,14 @@ import auctionsniper.AuctionEventListener.PriceSource;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
-    protected static final String ITEM_ID = "5701";
     private final Mockery context = new Mockery();
     private final SniperListener sniperListener =
         context.mock(SniperListener.class);
     private final Auction auction = context.mock(Auction.class);
+    private final States sniperState = context.states("sniper");
+    private final String ITEM_ID = "item-12346";
     private final AuctionSniper sniper = 
         new AuctionSniper(ITEM_ID, auction, sniperListener);
-    private final States sniperState = context.states("sniper");
     
     @Test public void
     reportsLostWhenAuctionCloses() {
@@ -38,10 +38,11 @@ public class AuctionSniperTest {
         final int price = 1001;
         final int increment = 25;
         final int bid = price + increment;
+        
         context.checking(new Expectations() {{
-            one(auction).bid(price + increment);
+            one(auction).bid(bid);
             atLeast(1).of(sniperListener).sniperBidding(
-                                            new SniperState(ITEM_ID, price, bid));
+                new SniperState(ITEM_ID, price, bid));
         }});
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }

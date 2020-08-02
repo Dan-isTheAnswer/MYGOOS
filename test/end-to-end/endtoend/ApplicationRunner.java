@@ -33,7 +33,6 @@ public class ApplicationRunner {
         driver.showsSniperStatus(itemId, 0, 0, STATUS_JOINING);
     }
     
-<<<<<<< HEAD
     public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
         driver.showsSniperStatus(itemId, lastPrice, lastBid,STATUS_BIDDING);
     }
@@ -49,23 +48,6 @@ public class ApplicationRunner {
     public void showsSniperHasWonAuction(int lastPrice) {
         driver.showsSniperStatus(itemId, lastPrice, lastPrice,STATUS_WON);
     }
-=======
-    public void hasShownSniperIsBidding(int lastPrice, int lastBid)  {
-        driver.showsSniperStatus(itemId, lastPrice, lastBid, STATUS_BIDDING);
-    }
-    
-	public void showsSniperHasLostAuction() {
-        driver.showsSniperStatus(itemId, 5701, 5701, STATUS_LOST);
-    }
-
-    public void hasShownSniperIsWinning(int winningBid) {
-        driver.showsSniperStatus(itemId, winningBid, winningBid, STATUS_WINNING);
-    } // *
-
-    public void showsSniperHasWonAuction(int lastPrice) {
-        driver.showsSniperStatus(itemId, lastPrice, lastPrice, STATUS_WON);
-    } // **
->>>>>>> temp6
     
 	public void stop() {
         if (driver != null) {

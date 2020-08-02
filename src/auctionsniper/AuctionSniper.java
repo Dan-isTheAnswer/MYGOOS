@@ -38,7 +38,7 @@ public class AuctionSniper implements AuctionEventListener {
             auction.bid(bid);
             sniperListener.sniperBidding(new SniperState(itemId, price, bid));
         }
-    }
+}
 
 	
 }
