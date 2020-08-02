@@ -10,16 +10,18 @@ import org.junit.runner.RunWith;
 import auctionsniper.Auction;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
+import auctionsniper.SniperState;
 import auctionsniper.AuctionEventListener.PriceSource;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
+    protected static final String ITEM_ID = "5701";
     private final Mockery context = new Mockery();
     private final SniperListener sniperListener =
         context.mock(SniperListener.class);
     private final Auction auction = context.mock(Auction.class);
     private final AuctionSniper sniper = 
-        new AuctionSniper(auction, sniperListener);
+        new AuctionSniper(ITEM_ID, auction, sniperListener);
     private final States sniperState = context.states("sniper");
     
     @Test public void
@@ -35,9 +37,11 @@ public class AuctionSniperTest {
     bidsHigherAndReportsBiddingWhenNewPriceArrives() {
         final int price = 1001;
         final int increment = 25;
+        final int bid = price + increment;
         context.checking(new Expectations() {{
             one(auction).bid(price + increment);
-            atLeast(1).of(sniperListener).sniperBidding();
+            atLeast(1).of(sniperListener).sniperBidding(
+                                            new SniperState(ITEM_ID, price, bid));
         }});
         sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }
@@ -62,7 +66,7 @@ public class AuctionSniperTest {
     reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction); 
-            allowing(sniperListener).sniperBidding();
+            allowing(sniperListener).sniperBidding(new SniperState(ITEM_ID, 123, 168));
             then(sniperState.is("bidding")); 
             atLeast(1).of(sniperListener).sniperLost();
             when(sniperState.is("bidding")); 
@@ -80,5 +84,9 @@ public class AuctionSniperTest {
         }});
         sniper.currentPrice(123, 45, PriceSource.FromSniper);
         sniper.auctionClosed();
+
+        // new SniperSnapshot(ITEM_ID, 135, 135, WON)
+        // sniper.currentPrice(123, 12, PriceSource.FromOtherBidder);
+        // sniper.currentPrice(135, 45, PriceSource.FromSniper); 
     }
 }
