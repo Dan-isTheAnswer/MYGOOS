@@ -5,41 +5,57 @@ import static auctionsniper.MainWindow.STATUS_JOINING;
 
 @SuppressWarnings("serial")
 public class SnipersTableModel extends AbstractTableModel {
-    private String statusText = STATUS_JOINING;
-    private SniperState sniperState = new SniperState("", 0, 0);
 
-    public int getColumnCount() { 
-        return Column.values().length;
-    }
+    private static String[] STATUS_TEXT = {MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING, MainWindow.STATUS_WINNING, MainWindow.STATUS_LOST, MainWindow.STATUS_WON};
 
-    public int getRowCount() { return 1; }
+    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
+    private SniperSnapshot sniperSnapshot = STARTING_UP;
 
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (Column.at(columnIndex)) {
-        case ITEM_IDENTIFIER:
-            return sniperState.itemId;
-        case LAST_PRICE:
-            return sniperState.lastPrice;
-        case LAST_BID:
-            return sniperState.lastBid;
-        case SNIPER_STATUS:
-            return statusText;
-        default:
-            throw new IllegalArgumentException("No column at " + columnIndex);
+    public enum Column {
+        ITEM_IDENTIFIER, LAST_PRICE, LAST_BID, SNIPER_STATUS;
+
+        public static Column at(int offset) {
+            return values()[offset];
         }
     }
 
+    private String statusText = STATUS_JOINING;
+
+    @Override
+    public int getRowCount() {
+        return 1;
+    }
+
+    @Override
+    public int getColumnCount() {
+        return Column.values().length;
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        switch (Column.at(columnIndex)) {
+            case ITEM_IDENTIFIER:
+                return sniperSnapshot.itemId;
+            case LAST_BID:
+                return sniperSnapshot.lastBid;
+            case LAST_PRICE:
+                return sniperSnapshot.lastPrice;
+            case SNIPER_STATUS:
+                return statusText;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 
     public void setStatusText(String newStatusText) {
-        statusText = newStatusText;
+        this.statusText = newStatusText;
         fireTableRowsUpdated(0, 0);
     }
 
-	public void sniperStatusChanged(SniperState newSniperState, 
-                                    String newStatusText)
-    {
-        sniperState = newSniperState;
-        statusText = newStatusText;
+    public void sniperStateChanged(SniperSnapshot newSniperSnapshot) {
+        sniperSnapshot = newSniperSnapshot;
+        statusText = STATUS_TEXT[newSniperSnapshot.state.ordinal()];
         fireTableRowsUpdated(0, 0);
+
     }
 }
