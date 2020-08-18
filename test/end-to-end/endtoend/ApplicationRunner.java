@@ -1,13 +1,10 @@
 package endtoend;
 
-import static auctionsniper.MainWindow.STATUS_JOINING;
-import static auctionsniper.MainWindow.STATUS_LOST;
-import static auctionsniper.MainWindow.STATUS_BIDDING;
-import static auctionsniper.MainWindow.STATUS_WINNING;
-import static auctionsniper.MainWindow.STATUS_WON;
 import static endtoend.FakeAuctionServer.XMPP_HOSTNAME;
+import static auctionsniper.SnipersTableModel.textFor;
 
 import auctionsniper.Main;
+import auctionsniper.SniperState;
 
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
@@ -30,24 +27,25 @@ public class ApplicationRunner {
         thread.setDaemon(true);
         thread.start();
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus("", 0, 0, STATUS_JOINING);
+        driver.showsSniperStatus("", 0, 0, textFor(SniperState.JOINING));
     }
     
-    public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
-        driver.showsSniperStatus(itemId, lastPrice, lastBid,STATUS_BIDDING);
-    }
     
 	public void showsSniperHasLostAuction(int lastPrice, int lastBid) {
-        driver.showsSniperStatus(itemId, lastPrice, lastBid, STATUS_LOST);
+        driver.showsSniperStatus(itemId, lastPrice, lastBid, textFor(SniperState.LOST));
     }
-
-    public void hasShownSniperIsWinning(int winningBid) {
-        driver.showsSniperStatus(itemId, winningBid, winningBid,STATUS_WINNING);
-    }
-
     public void showsSniperHasWonAuction(int lastPrice) {
-        driver.showsSniperStatus(itemId, lastPrice, lastPrice,STATUS_WON);
+        driver.showsSniperStatus(itemId, lastPrice, lastPrice,textFor(SniperState.WON));
     }
+    
+
+    public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
+        driver.showsSniperStatus(itemId, lastPrice, lastBid, textFor(SniperState.BIDDING));
+    }
+    public void hasShownSniperIsWinning(int winningBid) {
+        driver.showsSniperStatus(itemId, winningBid, winningBid, textFor(SniperState.WINNING));
+    }
+
     
 	public void stop() {
         if (driver != null) {

@@ -1,60 +1,56 @@
 package auctionsniper;
 
 import javax.swing.table.AbstractTableModel;
-import static auctionsniper.MainWindow.STATUS_JOINING;
 
 @SuppressWarnings("serial")
 public class SnipersTableModel extends AbstractTableModel {
 
-    private static String[] STATUS_TEXT = {MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING, MainWindow.STATUS_WINNING, MainWindow.STATUS_LOST, MainWindow.STATUS_WON};
+    private static String[] STATUS_TEXT = {"Joining", "Bidding", "Winning", "Lost", "Won"};
 
     private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
-    private SniperSnapshot sniperSnapshot = STARTING_UP;
+    private SniperSnapshot snapshot = STARTING_UP;
 
     public enum Column {
-        ITEM_IDENTIFIER, LAST_PRICE, LAST_BID, SNIPER_STATUS;
+        ITEM_IDENTIFIER, LAST_PRICE, LAST_BID, SNIPER_STATE;
 
         public static Column at(int offset) {
             return values()[offset];
         }
     }
 
-    private String statusText = STATUS_JOINING;
 
     @Override
-    public int getRowCount() {
+    public int getRowCount() { // getter from interface TableModel
         return 1;
     }
 
     @Override
-    public int getColumnCount() {
+    public int getColumnCount() { // getter
         return Column.values().length;
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public Object getValueAt(int rowIndex, int columnIndex) { //getter
         switch (Column.at(columnIndex)) {
             case ITEM_IDENTIFIER:
-                return sniperSnapshot.itemId;
+                return snapshot.itemId;
             case LAST_BID:
-                return sniperSnapshot.lastBid;
+                return snapshot.lastBid;
             case LAST_PRICE:
-                return sniperSnapshot.lastPrice;
-            case SNIPER_STATUS:
-                return statusText;
+                return snapshot.lastPrice;
+            case SNIPER_STATE:
+                return textFor(snapshot.state);
             default:
                 throw new IllegalArgumentException();
         }
     }
 
-    public void setStatusText(String newStatusText) {
-        this.statusText = newStatusText;
-        fireTableRowsUpdated(0, 0);
+    public static String textFor(SniperState state) {
+        return STATUS_TEXT[state.ordinal()]; 
     }
 
     public void sniperStateChanged(SniperSnapshot newSniperSnapshot) {
-        sniperSnapshot = newSniperSnapshot;
-        statusText = STATUS_TEXT[newSniperSnapshot.state.ordinal()];
+        snapshot = newSniperSnapshot;
         fireTableRowsUpdated(0, 0);
 
     }

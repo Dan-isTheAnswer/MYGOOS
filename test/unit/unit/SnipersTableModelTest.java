@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import auctionsniper.Column;
-import auctionsniper.MainWindow;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 import auctionsniper.SnipersTableModel;
@@ -21,6 +19,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
+import static auctionsniper.SnipersTableModel.textFor;
+import static auctionsniper.SnipersTableModel.Column;
 
 @RunWith(JMock.class)
 public class SnipersTableModelTest {
@@ -49,7 +49,7 @@ public class SnipersTableModelTest {
         assertColumnEquals(Column.ITEM_IDENTIFIER, "item id");
         assertColumnEquals(Column.LAST_PRICE, 555);
         assertColumnEquals(Column.LAST_BID, 666);
-        assertColumnEquals(Column.SNIPER_STATUS, MainWindow.STATUS_BIDDING);
+        assertColumnEquals(Column.SNIPER_STATE, textFor(SniperState.BIDDING));
     }
 
     private void assertColumnEquals(Column column, Object expected) {

@@ -116,8 +116,5 @@ public class Main {
             SwingUtilities.invokeLater(() -> ui.sniperStatusChanged(state));
         }
 
-        private void showStatus(final String status) {
-            SwingUtilities.invokeLater(() -> ui.showStatusText(status));
-        }
     }
 }
