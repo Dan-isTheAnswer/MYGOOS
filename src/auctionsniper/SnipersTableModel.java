@@ -3,7 +3,7 @@ package auctionsniper;
 import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
-public class SnipersTableModel extends AbstractTableModel {
+public class SnipersTableModel extends AbstractTableModel implements SniperListener {
 
     private static String[] STATUS_TEXT = {"Joining", "Bidding", "Winning", "Lost", "Won"};
 
@@ -63,6 +63,7 @@ public class SnipersTableModel extends AbstractTableModel {
         return STATUS_TEXT[state.ordinal()]; 
     }
 
+    @Override
     public void sniperStateChanged(SniperSnapshot newSniperSnapshot) {
         snapshot = newSniperSnapshot;
         fireTableRowsUpdated(0, 0);

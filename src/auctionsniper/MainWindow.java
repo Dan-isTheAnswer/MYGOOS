@@ -11,13 +11,14 @@ import javax.swing.JTable;
 
 
 @SuppressWarnings("serial")
-public class MainWindow extends JFrame {
+class MainWindow extends JFrame {
 
     private static final String SNIPERS_TABLE_NAME = "Snipers Table";
-    private final SnipersTableModel snipers = new SnipersTableModel();
+    private final SnipersTableModel snipers;
 
-    public MainWindow() {
+    public MainWindow(SnipersTableModel snipers) {
         super("Auction Sniper");
+        this.snipers = snipers;
         setName(Main.MAIN_WINDOW_NAME);
         fillContentPanel(makeSnipersTable());
         pack();
@@ -38,7 +39,4 @@ public class MainWindow extends JFrame {
     }
 
 
-    public void sniperStatusChanged(SniperSnapshot state) {
-        snipers.sniperStateChanged(state);
-    }
 }

@@ -25,6 +25,7 @@ public class Main {
     public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
 
     private MainWindow ui;
+    private final SnipersTableModel snipers = new SnipersTableModel();
 
     public Main() throws Exception {
         startUserInterface();
@@ -62,7 +63,7 @@ public class Main {
         chat.addMessageListener(
             new AuctionMessageTranslator(
                 connection.getUser(),
-                new AuctionSniper(itemId, auction, new SniperStateDisplayer())));
+                new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))));
         auction.join();
     }
 
@@ -79,7 +80,7 @@ public class Main {
 
             @Override
             public void run() {
-                ui = new MainWindow();
+                ui = new MainWindow(snipers);
             }
 
         });
@@ -109,11 +110,17 @@ public class Main {
         }
     }
 
-    private class SniperStateDisplayer implements SniperListener {
+    private class SwingThreadSniperListener implements SniperListener {
+
+        SniperListener sniperListener;
+
+        SwingThreadSniperListener(SniperListener listener) {
+            this.sniperListener = listener;
+        }
 
         @Override
         public void sniperStateChanged(SniperSnapshot state) {
-            SwingUtilities.invokeLater(() -> ui.sniperStatusChanged(state));
+            SwingUtilities.invokeLater(() -> sniperListener.sniperStateChanged(state));
         }
 
     }
