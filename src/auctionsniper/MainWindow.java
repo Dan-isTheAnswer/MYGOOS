@@ -1,7 +1,5 @@
 package auctionsniper;
 
-import static auctionsniper.Main.MAIN_WINDOW_NAME;
-
 import java.awt.Container;
 import java.awt.BorderLayout;
 
@@ -11,13 +9,14 @@ import javax.swing.JTable;
 
 
 @SuppressWarnings("serial")
-class MainWindow extends JFrame {
+public class MainWindow extends JFrame {
 
     private static final String SNIPERS_TABLE_NAME = "Snipers Table";
+    public static final String APPLICATION_TITLE = "Auction Sniper";
     private final SnipersTableModel snipers;
 
     public MainWindow(SnipersTableModel snipers) {
-        super("Auction Sniper");
+        super(APPLICATION_TITLE);
         this.snipers = snipers;
         setName(Main.MAIN_WINDOW_NAME);
         fillContentPanel(makeSnipersTable());
