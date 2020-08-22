@@ -8,7 +8,7 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
-public class Main {
+public class Main implements AuctionEventListener {
     private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
     private static final int ARG_PASSWORD = 2;
@@ -53,11 +53,17 @@ public class Main {
 
     private void joinAuction(XMPPConnection connection, String itemId) {
         final Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection),
-                (c, message) -> SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_LOST)));
+                                                            new AuctionMessageTranslator(this));
     }
+
 
     private String auctionId(String itemId, XMPPConnection connection) {
         return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
+    }
+
+    @Override
+    public void auctionClosed() {
+        SwingUtilities.invokeLater(() -> ui.showStatus(STATUS_LOST));
     }
 
 }
