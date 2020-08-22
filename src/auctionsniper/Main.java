@@ -66,4 +66,9 @@ public class Main implements AuctionEventListener {
         SwingUtilities.invokeLater(() -> ui.showStatus(STATUS_LOST));
     }
 
+    @Override
+    public void currentPrice(int price, int increment) {
+        // TODO Auto-generated method stub
+    }
+
 }
