@@ -28,7 +28,7 @@ public class Main implements SniperListener {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
     public static final String SNIPER_STATUS_NAME = "sniper status";
     public static final String BID_COMMAND_FORMAT = "";
-    private static final String JOIN_COMMAND_FORMAT = "";
+    public static final String JOIN_COMMAND_FORMAT = "";
 
     public Main() throws InvocationTargetException, InterruptedException {
         startUserInterface();
@@ -55,15 +55,10 @@ public class Main implements SniperListener {
     private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         final Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection), null);
         notToBeGCd = chat;
-        Auction auction = price -> {
-            try {
-                chat.sendMessage(String.format(BID_COMMAND_FORMAT, price));
-            } catch (XMPPException e) {
-                e.printStackTrace();
-            }
-        };
+        
+        Auction auction = new XMPPAuction(chat);
         chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction, this)));
-        chat.sendMessage(JOIN_COMMAND_FORMAT);
+        auction.join();
     }
 
 
