@@ -3,6 +3,7 @@ package endtoend;
 import static endtoend.FakeAuctionServer.XMPP_HOSTNAME;
 
 import auctionsniper.Main;
+import auctionsniper.MainWindow;
 
 public class ApplicationRunner {
 	public static final String SNIPER_XMPP_ID = "sniper@localhost/Auction";
@@ -24,11 +25,11 @@ public class ApplicationRunner {
         thread.setDaemon(true);
         thread.start();
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus(Main.STATUS_JOINING);
+        driver.showsSniperStatus(MainWindow.STATUS_JOINING);
     }
 
     public void showSniperHasLostAuction() {
-        driver.showsSniperStatus(Main.STATUS_LOST);
+        driver.showsSniperStatus(MainWindow.STATUS_LOST);
     }
 
     public void stop() {
@@ -38,6 +39,6 @@ public class ApplicationRunner {
     }
 
 	public void hasShownSniperIsBidding() {
-        driver.showsSniperStatus(Main.STATUS_BIDDING);
+        driver.showsSniperStatus(MainWindow.STATUS_BIDDING);
 	}
 }
