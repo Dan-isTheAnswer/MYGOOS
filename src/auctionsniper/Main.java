@@ -1,5 +1,7 @@
 package auctionsniper;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.SwingUtilities;
 
 import org.jivesoftware.smack.Chat;
@@ -22,14 +24,20 @@ public class Main {
 
     public static final String STATUS_JOINING = "Joining";
     public static final String STATUS_LOST = "Lost";
-	public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
-	public static final String SNIPER_STATUS_NAME = "sniper status";
+    public static final String STATUS_BIDDING = "Bidding";
+    public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
+    public static final String SNIPER_STATUS_NAME = "sniper status";
+    public static final String BID_COMMAND_FORMAT = "";
 
-    public Main() {
+    public Main() throws InvocationTargetException, InterruptedException {
         startUserInterface();
     }
 
-    public static void main(String... args) throws XMPPException {
+    private void startUserInterface() throws InvocationTargetException, InterruptedException {
+        SwingUtilities.invokeAndWait(() -> ui = new MainWindow());
+    }
+
+    public static void main(String... args) throws XMPPException, InvocationTargetException, InterruptedException {
         Main main = new Main();
         XMPPConnection connection = connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
         main.joinAuction(connection, args[ARG_ITEM_ID]);
@@ -44,14 +52,12 @@ public class Main {
     }
 
     private void joinAuction(XMPPConnection connection, String itemId) {
-        final Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection), 
-                            (c, message) -> SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_LOST)));
+        final Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection),
+                (c, message) -> SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_LOST)));
     }
 
     private String auctionId(String itemId, XMPPConnection connection) {
-        return null;
+        return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
     }
 
-    private void startUserInterface() {
-    }
 }
