@@ -4,6 +4,7 @@ public interface SniperListener {
 
 	void sniperBidding();
 	void sniperLost();
+	void sniperWinning();
 
 
 }
