@@ -3,6 +3,7 @@ package auctionsniper;
 import static auctionsniper.MainWindow.STATUS_BIDDING;
 import static auctionsniper.MainWindow.STATUS_LOST;
 import static auctionsniper.MainWindow.STATUS_WINNING;
+import static auctionsniper.MainWindow.STATUS_WON;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -80,8 +81,14 @@ public class Main {
             showStatus(STATUS_BIDDING);
         }
 
+        @Override
         public void sniperWinning() {
             showStatus(STATUS_WINNING);
+        }
+
+        @Override
+        public void sniperWon() {
+            showStatus(STATUS_WON);
         }
 
         private void showStatus(final String status) {
